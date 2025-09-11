@@ -1,0 +1,28 @@
+menu:
+  title: "&8&lServer Menu"
+  size: 27  # must be multiple of 9 (9,18,27,36,45,54). Auto-rounded up if not.
+  items:
+    compass:
+      slot: 11
+      material: COMPASS
+      name: "&a&lSpawn"
+      lore:
+        - "&7스폰으로 이동합니다."
+      command: "spawn"
+      close: true
+    kit:
+      slot: 13
+      material: CHEST
+      name: "&e&lStarter Kit"
+      lore:
+        - "&7첫 시작 키트를 받습니다."
+      command: "kit start"
+      close: true
+    shop:
+      slot: 15
+      material: EMERALD
+      name: "&b&lShop"
+      lore:
+        - "&7상점을 엽니다."
+      command: "상점"
+      close: true
