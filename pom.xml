@@ -2,18 +2,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>com.minkang.ultimate</groupId>
   <artifactId>MenuPlugin-ShiftF</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <name>MenuPlugin-ShiftF</name>
-  <description>Open a GUI menu with Shift+F (sneak + swap hand) on Spigot 1.16.5</description>
+  <description>Open a GUI menu with Shift+F (sneak + swap hand) or /메뉴</description>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
   <repositories>
     <repository>
       <id>spigot-repo</id>
@@ -24,7 +22,6 @@
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>
-
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
@@ -33,7 +30,6 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>

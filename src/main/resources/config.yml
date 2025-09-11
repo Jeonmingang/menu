@@ -1,6 +1,6 @@
 menu:
   title: "&8&lServer Menu"
-  size: 27  # must be multiple of 9 (9,18,27,36,45,54). Auto-rounded up if not.
+  size: 27
   items:
     compass:
       slot: 11

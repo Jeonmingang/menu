@@ -1,6 +1,14 @@
 name: MenuPlugin-ShiftF
 main: com.minkang.ultimate.menu.Main
-version: 1.0.0
+version: 1.1.0
 api-version: 1.16
 author: MingangTeam
-description: Open a GUI menu with Shift+F (sneak + swap hand)
+description: Open a GUI menu with Shift+F (sneak + swap hand) or /메뉴
+commands:
+  메뉴:
+    description: 메뉴 GUI 열기 및 리로드
+    usage: "/메뉴 | /메뉴 리로드"
+permissions:
+  menu.reload:
+    description: 메뉴 설정 리로드 권한
+    default: op
