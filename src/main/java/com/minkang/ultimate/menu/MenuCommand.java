@@ -29,7 +29,6 @@ public class MenuCommand implements CommandExecutor, TabCompleter {
             }
             return true;
         }
-
         if ("리로드".equalsIgnoreCase(args[0])) {
             if (!sender.hasPermission("menu.reload")) {
                 sender.sendMessage(Main.color("&c권한이 없습니다. (menu.reload)"));
@@ -40,7 +39,6 @@ public class MenuCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(Main.color("&a메뉴 설정을 리로드했습니다."));
             return true;
         }
-
         sender.sendMessage(Main.color("&e사용법: /메뉴 | /메뉴 리로드"));
         return true;
     }

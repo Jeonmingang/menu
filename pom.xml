@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.minkang.ultimate</groupId>
   <artifactId>MenuPlugin-ShiftF</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <name>MenuPlugin-ShiftF</name>
-  <description>Open a GUI menu with Shift+F (sneak + swap hand) or /메뉴</description>
+  <description>Open GUI with Shift+F or /메뉴. Supports console execution.</description>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>

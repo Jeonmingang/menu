@@ -13,12 +13,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 public class MenuManager {
+    public enum RunAs { PLAYER, CONSOLE }
+
     private final Main plugin;
     private Inventory menu;
     private String title;
     private int size;
+    private RunAs defaultRunAs = RunAs.PLAYER;
+
     private final java.util.Map<Integer, String> clickCommands = new java.util.HashMap<>();
     private final java.util.Map<Integer, Boolean> closeOnClick = new java.util.HashMap<>();
+    private final java.util.Map<Integer, RunAs> runAsMap = new java.util.HashMap<>();
 
     public MenuManager(Main plugin) { this.plugin = plugin; }
 
@@ -27,9 +32,14 @@ public class MenuManager {
         this.title = color(cfg.getString("menu.title", "&8&lServer Menu"));
         this.size = Math.max(9, cfg.getInt("menu.size", 27));
         if (size % 9 != 0) size = ((size / 9) + 1) * 9;
+
+        String def = cfg.getString("menu.default-run-as", "PLAYER").toUpperCase();
+        try { defaultRunAs = RunAs.valueOf(def); } catch (Exception ignored) { defaultRunAs = RunAs.PLAYER; }
+
         this.menu = Bukkit.createInventory(null, size, title);
         this.clickCommands.clear();
         this.closeOnClick.clear();
+        this.runAsMap.clear();
 
         ConfigurationSection items = cfg.getConfigurationSection("menu.items");
         if (items != null) {
@@ -42,6 +52,7 @@ public class MenuManager {
                 java.util.List<String> lore = it.getStringList("lore");
                 String command = it.getString("command", "");
                 boolean close = it.getBoolean("close", true);
+                String runAsStr = it.getString("run-as", null);
 
                 if (slot < 0 || slot >= size) continue;
                 Material mat = Material.matchMaterial(materialName);
@@ -61,6 +72,12 @@ public class MenuManager {
                 this.menu.setItem(slot, stack);
                 this.clickCommands.put(slot, command == null ? "" : command);
                 this.closeOnClick.put(slot, close);
+
+                RunAs ra = defaultRunAs;
+                if (runAsStr != null) {
+                    try { ra = RunAs.valueOf(runAsStr.toUpperCase()); } catch (Exception ignored) {}
+                }
+                this.runAsMap.put(slot, ra);
             }
         }
     }
@@ -72,8 +89,15 @@ public class MenuManager {
         if (!clickCommands.containsKey(slot)) return false;
         String cmd = clickCommands.get(slot);
         boolean close = closeOnClick.getOrDefault(slot, true);
+        RunAs ra = runAsMap.getOrDefault(slot, defaultRunAs);
+
         if (cmd != null && !cmd.trim().isEmpty()) {
-            p.performCommand(cmd.replaceFirst("^/", ""));
+            String executable = cmd.replaceFirst("^/", "").replace("{player}", p.getName());
+            if (ra == RunAs.CONSOLE) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), executable);
+            } else {
+                p.performCommand(executable);
+            }
         }
         return close;
     }
