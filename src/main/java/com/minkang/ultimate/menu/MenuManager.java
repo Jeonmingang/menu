@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MenuManager {
     public enum RunAs { PLAYER, CONSOLE }
@@ -21,9 +23,9 @@ public class MenuManager {
     private int size;
     private RunAs defaultRunAs = RunAs.PLAYER;
 
-    private final java.util.Map<Integer, String> clickCommands = new java.util.HashMap<>();
-    private final java.util.Map<Integer, Boolean> closeOnClick = new java.util.HashMap<>();
-    private final java.util.Map<Integer, RunAs> runAsMap = new java.util.HashMap<>();
+    private final Map<Integer, String> clickCommands = new HashMap<>();
+    private final Map<Integer, Boolean> closeOnClick = new HashMap<>();
+    private final Map<Integer, RunAs> runAsMap = new HashMap<>();
 
     public MenuManager(Main plugin) { this.plugin = plugin; }
 
@@ -31,53 +33,47 @@ public class MenuManager {
         FileConfiguration cfg = plugin.getConfig();
         this.title = color(cfg.getString("menu.title", "&8&lServer Menu"));
         this.size = Math.max(9, cfg.getInt("menu.size", 27));
-        if (size % 9 != 0) size = ((size / 9) + 1) * 9;
+        this.defaultRunAs = RunAs.valueOf(cfg.getString("menu.default-run-as", "PLAYER").toUpperCase());
 
-        String def = cfg.getString("menu.default-run-as", "PLAYER").toUpperCase();
-        try { defaultRunAs = RunAs.valueOf(def); } catch (Exception ignored) { defaultRunAs = RunAs.PLAYER; }
+        this.menu = Bukkit.createInventory(null, size, color(title));
+        clickCommands.clear();
+        closeOnClick.clear();
+        runAsMap.clear();
 
-        this.menu = Bukkit.createInventory(null, size, title);
-        this.clickCommands.clear();
-        this.closeOnClick.clear();
-        this.runAsMap.clear();
-
-        ConfigurationSection items = cfg.getConfigurationSection("menu.items");
-        if (items != null) {
-            for (String key : items.getKeys(false)) {
-                ConfigurationSection it = items.getConfigurationSection(key);
-                if (it == null) continue;
-                int slot = it.getInt("slot", -1);
-                String materialName = it.getString("material", "STONE");
-                String name = it.getString("name", "&fItem");
-                java.util.List<String> lore = it.getStringList("lore");
-                String command = it.getString("command", "");
-                boolean close = it.getBoolean("close", true);
-                String runAsStr = it.getString("run-as", null);
+        ConfigurationSection itemsSec = cfg.getConfigurationSection("menu.items");
+        if (itemsSec != null) {
+            for (String key : itemsSec.getKeys(false)) {
+                ConfigurationSection is = itemsSec.getConfigurationSection(key);
+                if (is == null) continue;
+                int slot = is.getInt("slot", -1);
+                String matName = is.getString("material", "STONE");
+                String name = color(is.getString("name", "&fItem"));
+                java.util.List<String> lore = new ArrayList<>();
+                for (String l : is.getStringList("lore")) lore.add(color(l));
+                String command = is.getString("command", "");
+                boolean close = is.getBoolean("close", true);
+                String runAsString = is.getString("run-as", null);
 
                 if (slot < 0 || slot >= size) continue;
-                Material mat = Material.matchMaterial(materialName);
+                Material mat = Material.matchMaterial(matName);
                 if (mat == null) mat = Material.STONE;
 
-                ItemStack stack = new ItemStack(mat);
-                ItemMeta meta = stack.getItemMeta();
+                ItemStack it = new ItemStack(mat);
+                ItemMeta meta = it.getItemMeta();
                 if (meta != null) {
-                    meta.setDisplayName(color(name));
-                    if (lore != null && !lore.isEmpty()) {
-                        java.util.List<String> colored = new ArrayList<>();
-                        for (String line : lore) colored.add(color(line));
-                        meta.setLore(colored);
-                    }
-                    stack.setItemMeta(meta);
+                    meta.setDisplayName(name);
+                    if (!lore.isEmpty()) meta.setLore(lore);
+                    it.setItemMeta(meta);
                 }
-                this.menu.setItem(slot, stack);
-                this.clickCommands.put(slot, command == null ? "" : command);
-                this.closeOnClick.put(slot, close);
+                menu.setItem(slot, it);
 
+                clickCommands.put(slot, command);
+                closeOnClick.put(slot, close);
                 RunAs ra = defaultRunAs;
-                if (runAsStr != null) {
-                    try { ra = RunAs.valueOf(runAsStr.toUpperCase()); } catch (Exception ignored) {}
+                if (runAsString != null) {
+                    try { ra = RunAs.valueOf(runAsString.toUpperCase()); } catch (Exception ignored) {}
                 }
-                this.runAsMap.put(slot, ra);
+                runAsMap.put(slot, ra);
             }
         }
     }
@@ -87,21 +83,23 @@ public class MenuManager {
     public boolean handleClick(Player p, int slot) {
         if (slot < 0 || slot >= size) return false;
         if (!clickCommands.containsKey(slot)) return false;
-        String cmd = clickCommands.get(slot);
-        boolean close = closeOnClick.getOrDefault(slot, true);
-        RunAs ra = runAsMap.getOrDefault(slot, defaultRunAs);
 
-        if (cmd != null && !cmd.trim().isEmpty()) {
-            String executable = cmd.replaceFirst("^/", "").replace("{player}", p.getName());
-            if (ra == RunAs.CONSOLE) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), executable);
-            } else {
-                p.performCommand(executable);
-            }
+        String cmd = clickCommands.get(slot);
+        if (cmd == null || cmd.trim().isEmpty()) return true;
+
+        cmd = cmd.replace("{player}", p.getName());
+
+        RunAs ra = runAsMap.getOrDefault(slot, defaultRunAs);
+        if (ra == RunAs.CONSOLE) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+        } else {
+            p.performCommand(cmd);
         }
-        return close;
+
+        return closeOnClick.getOrDefault(slot, true);
     }
 
-    private String color(String s) { return ChatColor.translateAlternateColorCodes('&', s); }
-    public String getTitle() { return title; }
+    public static String color(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
+    }
 }

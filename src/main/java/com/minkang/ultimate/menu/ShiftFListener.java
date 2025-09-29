@@ -10,7 +10,7 @@ public class ShiftFListener implements Listener {
     public ShiftFListener(MenuManager menuManager) { this.menuManager = menuManager; }
 
     @EventHandler
-    public void onSwapHand(PlayerSwapHandItemsEvent event) {
+    public void onSwap(PlayerSwapHandItemsEvent event) {
         Player p = event.getPlayer();
         if (p.isSneaking()) {
             event.setCancelled(true);
