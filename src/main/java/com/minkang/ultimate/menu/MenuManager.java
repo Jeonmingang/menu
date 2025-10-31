@@ -87,13 +87,14 @@ public class MenuManager {
         String cmd = clickCommands.get(slot);
         if (cmd == null || cmd.trim().isEmpty()) return true;
 
-        cmd = cmd.replace("{player}", p.getName());
+        final String cmdToRun = cmd.replace("{player}", p.getName());
 
         RunAs ra = runAsMap.getOrDefault(slot, defaultRunAs);
         if (ra == RunAs.CONSOLE) {
-            Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
+            Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmdToRun));
         } else {
-            Bukkit.getScheduler().runTask(plugin, () -> p.performCommand(cmd));
+            final org.bukkit.entity.Player playerRef = p;
+            Bukkit.getScheduler().runTask(plugin, () -> playerRef.performCommand(cmdToRun));
         }
 
         return closeOnClick.getOrDefault(slot, true);
