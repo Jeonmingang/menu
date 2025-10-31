@@ -1,7 +1,7 @@
 menu:
   title: "&8&lServer Menu"
   size: 27
-  default-run-as: CONSOLE  # PLAYER or CONSOLE
+  default-run-as: PLAYER  # PLAYER or CONSOLE
 
   items:
     compass:
