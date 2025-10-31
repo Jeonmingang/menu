@@ -1,13 +1,32 @@
 menu:
-  title: "&8&lServer Menu"
+  title: "&8&l서버 메뉴"
   size: 27
   default-run-as: PLAYER  # PLAYER or CONSOLE
 
   items:
+    paki:
+      slot: 9
+      material: PAPER
+      name: "&c도박장"
+      lore:
+        - "&7도박장 으로 이동합니다."
+        - "&a가위바위보 &f와 &6파칭코 &f를 하실 수 있습니다"
+      command: "warp 지리는파칭코"
+      close: true
+
+    efforti:
+      slot: 22
+      material: PAPER
+      name: "&e노력치장"
+      lore:
+        - "&7노력치장으로 이동합니다."
+      command: "warp 노력치뿜뿜"
+      close: true
+
     compass:
       slot: 11
       material: COMPASS
-      name: "&a&lSpawn"
+      name: "&a스폰"
       lore:
         - "&7스폰으로 이동합니다."
       command: "spawn"
@@ -15,18 +34,71 @@ menu:
 
     kit:
       slot: 13
-      material: CHEST
-      name: "&e&lStarter Kit"
+      material: GRASS_BLOCK
+      name: "&b야생"
       lore:
-        - "&7첫 시작 키트를 받습니다."
-      command: "kit start"
+        - "&7랜덤한 야생 장소로 이동 합니다."
+      command: "야생랜덤"
       close: true
 
-    message:
+    shop:
       slot: 15
-      material: PAPER
-      name: "&b&lBroadcast"
+      material: CHEST
+      name: "&b상점"
       lore:
-        - "&7방송 테스트: {player}"
-      command: "say {player} opened the menu!"
+        - "&7상점으로 이동 합니다."
+        - "&6/상점 목록 &f입력 시 상점을 확인 할 수 있습니다."
+        - "&6/상점 열기 <상점> &f으로 상점 이용도 가능합니다."
+      command: "warp shop"
+      close: true
+
+    enchant:
+      slot: 17
+      material: DIAMOND_PICKAXE
+      name: "&6강화소"
+      lore:
+        - "&7강화소으로 이동 합니다."
+      command: "warp 강화소"
+      close: true
+
+    rating:
+      slot: 4
+      material: NETHER_STAR   # PIXELMON_POKE_BALL 은 Spigot Material에 없음 → 대체
+      name: "&7[ &c픽셀몬 레이팅 &6랭크 게임 &7]"
+      lore:
+        - "&7픽셀몬 배틀 랭크전 대기열에 등록 됩니다."
+        - "&7클릭시 랭크게임 대기열에 등록 됩니다."
+        - "&7두달마다 랭크게임이 초기화 됩니다."
+        - "&7티어 마감에 따라서 보상이 지급 됩니다"
+      command: "레이팅 매칭"
+      close: true
+
+    bank:
+      slot: 6
+      material: STONE          # 'stone' → STONE (대문자 권장)
+      name: "&b도감 보상"
+      lore:
+        - "&7도감 보상을 확인합니다."
+      command: "도감"
+      close: true
+
+    rudwod:
+      slot: 2
+      material: IRON_SWORD
+      name: "&7[ &b경쟁전 &6랭크 게임 &7]"
+      lore:
+        - "&7경쟁전 대기열에 등록 됩니다."
+        - "&d팀전 &7과 &e개인전&7으로 등록 가능합니다"
+        - "&7경쟁전이 초기화 되면 &a티어&7별 보상을 지급합니다."
+        - "&7/경쟁전 매치 취소 를 통해 매치를 취소 할 수 있습니다."
+      command: "경쟁전 매치"
+      close: true
+
+    tja:
+      slot: 0
+      material: DARK_OAK_SAPLING   # 'dark_oak_sapling' → DARK_OAK_SAPLING
+      name: "&e섬 이동"
+      lore:
+        - "&7섬으로 이동합니다"
+      command: "is go"
       close: true

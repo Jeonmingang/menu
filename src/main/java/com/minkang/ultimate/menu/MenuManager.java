@@ -91,9 +91,9 @@ public class MenuManager {
 
         RunAs ra = runAsMap.getOrDefault(slot, defaultRunAs);
         if (ra == RunAs.CONSOLE) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+            Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
         } else {
-            p.performCommand(cmd);
+            Bukkit.getScheduler().runTask(plugin, () -> p.performCommand(cmd));
         }
 
         return closeOnClick.getOrDefault(slot, true);
